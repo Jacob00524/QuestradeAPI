@@ -231,3 +231,26 @@ int questrade_fetch_candle(questrade_candle **candles_out, char **json_out, unsi
 
     return count;
 }
+
+char *questrade_send_search(char *symbol)
+{
+    long response_status;
+    char url[1024], *response;
+    questrade_tokens tokens;
+
+    if (!symbol)
+        return NULL;
+
+    tokens = questrade_get_tokens();
+
+    sprintf(url, "%sv1/symbols/search?prefix=%s", tokens.api_server, symbol);
+    response = http_get(url, tokens.access_token, &response_status);
+    if (response_status != 200 || !response)
+    {
+        if (response)
+            free(response);
+        return NULL;
+    }
+
+    return response;
+}

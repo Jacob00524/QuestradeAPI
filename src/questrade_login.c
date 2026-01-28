@@ -195,6 +195,17 @@ void questrade_stop_login_routine()
     }
 }
 
+int questrade_is_tokens_expired(questrade_tokens tokens)
+{
+    time_t time_now, time_expired;
+
+    time_expired = tokens.time_refreshed + tokens.expires_in;
+    time_now = time(NULL);
+    if (time_now >= time_expired)
+        return 0;
+    return 1;
+}
+
 void questrade_login_cleanup()
 {
     questrade_stop_login_routine();

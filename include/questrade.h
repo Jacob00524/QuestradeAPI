@@ -3,6 +3,8 @@
 #include "questrade_parse.h"
 #include "questrade_login.h"
 #include "questrade_fetch.h"
+#include "questrade_analyze.h"
+#include "questrade_time.h"
 
 int questrade_init(char *consumer_key, char *callback);
 void questrade_cleanup();

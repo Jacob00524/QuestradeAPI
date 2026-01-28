@@ -4,4 +4,6 @@ int questrade_login_from_refresh(char *token);
 int questrade_start_login_routine(questrade_tokens current_tokens);
 void questrade_stop_login_routine();
 
+int questrade_is_tokens_expired(questrade_tokens tokens);
+
 void questrade_login_cleanup();

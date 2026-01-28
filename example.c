@@ -1,3 +1,4 @@
+#include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -10,6 +11,8 @@ int main()
     questrade_account account;
     questrade_balance balance;
     questrade_candle *candles = NULL;
+    struct tm start_tm = { 0 }, end_tm = { 0 };
+    char start_str[50], end_str[50];
 
     if (!questrade_init(NULL, NULL))
     {
@@ -17,7 +20,7 @@ int main()
         return 1;
     }
 
-    if (!questrade_login_from_refresh("6NWiGWPPaFhsQPU24IY5IpoIUNVVRP9k0")) /* Insert refresh token from app hub, this is an example */
+    if (!questrade_login_from_refresh("refresh-token")) /* Insert refresh token from app hub, this is an example */
     {
         printf("Failed to login using refresh token.\n");
         return 1;
@@ -81,7 +84,17 @@ int main()
     }
 
     printf("A day of candles:\n");
-    candles_count = questrade_fetch_candle(&candles, NULL, 9339, "2026-01-27T00:00:00.000000-05:00", "2026-01-28T00:00:00.000000-05:00", "OneHour");
+    start_tm.tm_year = 2026 - 1900; /* very important to subtract 1900, don't forget */
+    start_tm.tm_mon = 0; /* January */
+    start_tm.tm_mday = 27;
+    questrade_tm_to_iso(&start_tm, start_str, sizeof(start_str));
+
+    end_tm.tm_year = 2026 - 1900;
+    end_tm.tm_mon = 0;
+    end_tm.tm_mday = 28;
+    questrade_tm_to_iso(&end_tm, end_str, sizeof(end_str));
+
+    candles_count = questrade_fetch_candle(&candles, NULL, 9339, start_str, end_str, "OneHour");
     if (candles_count == 0 || !candles)
     {
         printf("No candles.\n");

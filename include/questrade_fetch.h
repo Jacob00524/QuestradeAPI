@@ -50,3 +50,8 @@ int questrade_update_quotes(char *ids, char **json_out);
 
 */
 int questrade_fetch_candle(questrade_candle **candles_out, char **json_out, unsigned int symbolId, char *start, char *end, char *interval);
+
+/*
+    Sends a search for a symbol and returns the raw json
+*/
+char *questrade_send_search(char *symbol);
