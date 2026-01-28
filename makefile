@@ -4,8 +4,9 @@ MODE ?= release
 TARGET = libquestrade.so
 EXAMPLE_TARGET = example.out
 BUILD_FOLDER = build
+ALGO_SRC_FOLDER = algorithms
 
-CPPFLAGS = -Iexternal/curlwrapper/include -Iexternal/cJSON -Iinclude
+CPPFLAGS = -Iexternal/curlwrapper/include -Iexternal/cJSON
 LDFLAGS = -shared -Wl,-soname,$(TARGET)
 DEBUG_CFLAGS   = -g3 -O0 -Wall -Wextra -fPIC -fsanitize=address,undefined
 RELEASE_CFLAGS = -O4 -Wall -Wextra -fPIC
@@ -20,11 +21,13 @@ else
 endif
 
 SRC := $(wildcard src/*.c)
+SRC_ALGO := $(wildcard src/$(ALGO_SRC_FOLDER)/*.c)
 OBJ := $(patsubst src/%.c, $(BUILD_FOLDER)/%.o, $(SRC))
+OBJ_ALGO += $(patsubst src/algorithms/*.c, $(BUILD_FOLDER)/$(ALGO_SRC_FOLDER)/%.o, $(SRC_ALGO))
 
-default: $(TARGET) $(EXAMPLE_TARGET)
+default: $(CURLWRAPPER_SO) $(CJSON_SO) $(TARGET) $(EXAMPLE_TARGET)
 
-$(TARGET): $(OBJ) $(CURLWRAPPER_SO) $(CJSON_SO)
+$(TARGET): $(OBJ) $(OBJ_ALGO)
 	$(CC) $(OBJ) -o $(BUILD_FOLDER)/$@ $(LDFLAGS) \
 	-L. -lcurlwrapper -lcjson \
 	-Wl,-rpath,'$$ORIGIN'
@@ -40,16 +43,22 @@ $(CJSON_SO):
 	cp -L $(CJSON_SO) .
 
 $(BUILD_FOLDER)/%.o: src/%.c | $(BUILD_FOLDER)
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) -Iinclude -c $< -o $@
+
+$(BUILD_FOLDER)/$(ALGO_SRC_FOLDER) /%.o: src/%.c | $(BUILD_FOLDER)/$(ALGO_SRC_FOLDER) 
+	$(CC) $(CFLAGS) $(CPPFLAGS) -../Iinclude -c $< -o $@
 
 $(BUILD_FOLDER):
-	mkdir $@
+	mkdir -p $@
 
 $(EXAMPLE_TARGET): example.c $(TARGET)
 	$(CC) -g3 -O0 -Wall -Wextra -fsanitize=address,undefined \
 	-Iinclude $< -o $@ \
 	-L. -lquestrade \
 	-Wl,-rpath,\$$ORIGIN
+
+$(BUILD_FOLDER)/$(ALGO_SRC_FOLDER):
+	mkdir -p $@
 
 clean:
 	$(MAKE) -C external/curlwrapper clean

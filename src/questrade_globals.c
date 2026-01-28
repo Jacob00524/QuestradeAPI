@@ -26,6 +26,9 @@ static questrade_quote* global_quotes = NULL;
 static int global_quotes_count = 0;
 static pthread_mutex_t questrade_quotes_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+static pthread_mutex_t questrade_crossover_settings_mutex = PTHREAD_MUTEX_INITIALIZER;
+questrade_crossover_settings global_crossover_settings = { 1, 5, 5 };
+
 /*
     Settings
 */
@@ -45,6 +48,24 @@ void questrade_set_settings(questrade_settings settings)
     pthread_mutex_lock(&questrade_settings_mutex);
     global_questrade_settings = settings;
     pthread_mutex_unlock(&questrade_settings_mutex);
+}
+
+questrade_crossover_settings questrade_get_crossover_settings()
+{
+    questrade_crossover_settings copy;
+
+    pthread_mutex_lock(&questrade_crossover_settings_mutex);
+    copy = global_crossover_settings;
+    pthread_mutex_unlock(&questrade_crossover_settings_mutex);
+
+    return copy;
+}
+
+void questrade_set_crossover_settings(questrade_crossover_settings settings)
+{
+    pthread_mutex_lock(&questrade_crossover_settings_mutex);
+    global_crossover_settings = settings;
+    pthread_mutex_unlock(&questrade_crossover_settings_mutex);
 }
 
 /*

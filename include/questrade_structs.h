@@ -90,3 +90,70 @@ typedef struct questrade_candle
     double close;
     unsigned long volume;
 }questrade_candle;
+
+/*
+    Algorithms structs
+*/
+typedef struct questrade_algorithm_stats
+{
+    int wins;
+    int losses;
+    int draws;
+    int trade_count;
+    int buy_count;
+    int sell_count;
+    time_t last_calculated;
+    double profit_per_stock;
+    double gross_profit;
+    double gross_loss;
+    double profit_factor;
+    double max_drawdown;
+    double avg_trade_pnl;
+}questrade_algorithm_stats;
+
+typedef struct questrade_crossover_stats
+{
+    int fast_period;
+    int slow_period;
+    char symbol[256];
+    int symbolId;
+    questrade_algorithm_stats stats;
+}questrade_crossover_stats;
+
+typedef struct questrade_crossover_settings
+{
+    int allow_loss;
+    int min_trade_count;
+    int step;
+}questrade_crossover_settings;
+
+
+/* 
+    TSX30
+*/
+typedef struct questrade_TSX_30_Stock
+{
+    int ranking;
+    char name[1024];
+    char symbol[256];
+    int sector;
+    int questrade_id;
+}questrade_TSX_30_Stock;
+
+typedef struct questrade_TSX_30
+{
+    int technology_count;
+    questrade_TSX_30_Stock *technology;
+
+    int mining_count;
+    questrade_TSX_30_Stock *mining;
+
+    int indsutrial_products_services_count;
+    questrade_TSX_30_Stock *indsutrial_products_services;
+
+    int clean_technology_energy_count;
+    questrade_TSX_30_Stock *clean_technology_energy;
+
+    int financial_services_count;
+    questrade_TSX_30_Stock *financial_services;
+}questrade_TSX_30;

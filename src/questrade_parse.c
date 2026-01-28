@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 #include "questrade.h"
-#include "cJSON.h"
 
 int questrade_parse_tokens(char *data, questrade_tokens *user_data)
 {
@@ -447,4 +446,35 @@ FAIL_CANDLES:
         free(user_data);
     cJSON_Delete(json_root);
     return 0;
+}
+
+cJSON *questrade_crossover_settings_to_json(questrade_crossover_settings settings)
+{
+    cJSON *json_root;
+
+    json_root = cJSON_CreateObject();
+    if (!json_root)
+        return NULL;
+    
+    cJSON_AddNumberToObject(json_root, "allow_loss", settings.allow_loss);
+    cJSON_AddNumberToObject(json_root, "min_trade_count", settings.min_trade_count);
+    cJSON_AddNumberToObject(json_root, "step", settings.step);
+    return json_root;
+}
+
+questrade_crossover_settings questrade_json_to_crossover_settings(cJSON *json)
+{
+    cJSON *json_temp;
+    questrade_crossover_settings settings = { 0 };
+
+    json_temp = cJSON_GetObjectItem(json, "allow_loss");
+    settings.allow_loss = cJSON_GetNumberValue(json_temp);
+
+    json_temp = cJSON_GetObjectItem(json, "min_trade_count");
+    settings.min_trade_count = cJSON_GetNumberValue(json_temp);
+
+    json_temp = cJSON_GetObjectItem(json, "step");
+    settings.step = cJSON_GetNumberValue(json_temp);
+
+    return settings;
 }
