@@ -1,0 +1,10 @@
+# build artifacts
+build/
+*.o
+*.so
+example.out
+
+# editor junk
+*.swp
+*~
+.vscode/
