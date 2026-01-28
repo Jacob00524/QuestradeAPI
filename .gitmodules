@@ -1,0 +1,6 @@
+[submodule "external/cJSON"]
+	path = external/cJSON
+	url = https://github.com/DaveGamble/cJSON.git
+[submodule "external/curlwrapper"]
+	path = external/curlwrapper
+	url = https://github.com/Jacob00524/curlwrapper.git
