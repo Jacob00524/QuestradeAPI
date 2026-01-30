@@ -7,7 +7,7 @@
 /*
     callback and consumer key can be NULL if not using login from code
 */
-int questrade_init(char *consumer_key, char *callback, void(*token_refresh_callback)(questrade_tokens))
+int questrade_init(char *consumer_key, char *callback, void(*token_refresh_callback)(questrade_tokens, char*))
 {
     questrade_settings settings = { 0 };
 

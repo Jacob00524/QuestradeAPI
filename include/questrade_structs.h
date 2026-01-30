@@ -14,7 +14,7 @@ typedef struct questrade_settings
 {
     char *consumer_key; /* this is also the client_id */
     char *callback_url; /* used for login with code */
-    void(*token_refresh_callback)(questrade_tokens);
+    void(*token_refresh_callback)(questrade_tokens, char*);
 }questrade_settings;
 
 typedef struct questrade_account
