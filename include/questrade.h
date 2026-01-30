@@ -19,5 +19,5 @@ int questrade_tsx_30_get_sector(int sector, questrade_TSX_30_Stock **out);
 int questrade_tsx_30_get_all(questrade_TSX_30_Stock **out);
 void questrade_tsx_30_cleanup();
 
-int questrade_init(char *consumer_key, char *callback);
+int questrade_init(char *consumer_key, char *callback, void(*token_refresh_callback)(questrade_tokens));
 void questrade_cleanup();

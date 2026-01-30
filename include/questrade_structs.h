@@ -1,11 +1,5 @@
 #include <time.h>
 
-typedef struct questrade_settings
-{
-    char *consumer_key; /* this is also the client_id */
-    char *callback_url; /* used for login with code */
-}questrade_settings;
-
 typedef struct questrade_tokens
 {
     char access_token[256];
@@ -15,6 +9,13 @@ typedef struct questrade_tokens
     char api_server[256];
     time_t time_refreshed;
 }questrade_tokens;
+
+typedef struct questrade_settings
+{
+    char *consumer_key; /* this is also the client_id */
+    char *callback_url; /* used for login with code */
+    void(*token_refresh_callback)(questrade_tokens);
+}questrade_settings;
 
 typedef struct questrade_account
 {

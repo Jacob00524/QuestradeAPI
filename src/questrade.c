@@ -7,7 +7,7 @@
 /*
     callback and consumer key can be NULL if not using login from code
 */
-int questrade_init(char *consumer_key, char *callback)
+int questrade_init(char *consumer_key, char *callback, void(*token_refresh_callback)(questrade_tokens))
 {
     questrade_settings settings = { 0 };
 
@@ -22,6 +22,9 @@ int questrade_init(char *consumer_key, char *callback)
         settings.callback_url = malloc(strlen(callback) + 1);
         strcpy(settings.callback_url, callback);
     }
+
+    if (token_refresh_callback)
+        settings.token_refresh_callback = token_refresh_callback;
     
     questrade_set_settings(settings);
     return 1;

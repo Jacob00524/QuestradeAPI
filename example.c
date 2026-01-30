@@ -14,7 +14,7 @@ int main()
     struct tm start_tm = { 0 }, end_tm = { 0 };
     char start_str[50], end_str[50];
 
-    if (!questrade_init(NULL, NULL))
+    if (!questrade_init(NULL, NULL, NULL))
     {
         printf("Failed to initialize questrade library.\n");
         return 1;

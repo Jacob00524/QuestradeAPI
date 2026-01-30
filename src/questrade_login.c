@@ -52,6 +52,8 @@ int questrade_login_from_code(char *code)
 
     questrade_set_tokens(tokens);
     free(returned_tokens);
+    if (settings.token_refresh_callback)
+        settings.token_refresh_callback(tokens);
     return 1;
 }
 
@@ -63,6 +65,7 @@ int questrade_login_from_refresh(char *token)
     long response_status;
     char request_url[512], *returned_tokens;
     questrade_tokens tokens = { 0 };
+    questrade_settings settings = questrade_get_settings();
 
     if (!token || !token[0])
         return 0;
@@ -86,6 +89,8 @@ int questrade_login_from_refresh(char *token)
 
     questrade_set_tokens(tokens);
     free(returned_tokens);
+    if (settings.token_refresh_callback)
+        settings.token_refresh_callback(tokens);
     return 1;
 }
 
