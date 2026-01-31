@@ -1,3 +1,8 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <float.h>
 #include "questrade.h"
 
 /*
@@ -13,7 +18,10 @@ int questrade_calc_ma_crossover(questrade_candle *candles, int count, int slow_p
         return 0;
     slow_count = questrade_calc_moving_series(candles, count, slow_period, &slow_ma);
     if (slow_count <= 0)
+    {
+        free(fast_ma);
         return 0;
+    }
 
     n = (fast_count < slow_count) ? fast_count : slow_count;
 
@@ -45,7 +53,8 @@ int questrade_calc_ma_crossover(questrade_candle *candles, int count, int slow_p
             }
         }
     }
-
+    free(fast_ma);
+    free(slow_ma);
     return found_count;
 }
 
@@ -262,8 +271,15 @@ cJSON *questrade_crossover_analyze_run_tsx30_sector(questrade_TSX_30_Stock *stoc
         questrade_candle *candles = NULL;
         int candles_count, slow_period, fast_period;
         char start_str[256], end_str[256];
+        struct tm time_end = { 0 }, time_start = { 0 };
+        time_t time_now;
 
-        questrade_get_iso_time_str(end_str, start_str, 365);
+        time_now = time(NULL);
+        time_end = *localtime(&time_now);
+        time_start = time_end;
+        time_start.tm_year -= 1;
+        questrade_tm_to_iso(&time_end, end_str, sizeof(end_str));
+        questrade_tm_to_iso(&time_start, start_str, sizeof(start_str));
         candles_count = questrade_fetch_candle(&candles, NULL, stocks[t].questrade_id, start_str, end_str, "OneDay");
         if (candles_count <= 0)
         {

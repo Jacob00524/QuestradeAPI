@@ -40,6 +40,10 @@ int questrade_parse_tokens(char *data, questrade_tokens *user_data)
         goto FAIL;
     snprintf(user_data->api_server, sizeof(user_data->api_server), "%s", cJSON_GetStringValue(json_obj));
 
+    json_obj = cJSON_GetObjectItem(json_root, "time_refreshed");
+    if (json_obj)
+        user_data->time_refreshed = cJSON_GetNumberValue(json_obj);
+
     cJSON_Delete(json_root);
     return 1;
 

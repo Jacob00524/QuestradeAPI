@@ -23,12 +23,12 @@ endif
 SRC := $(wildcard src/*.c)
 SRC_ALGO := $(wildcard src/$(ALGO_SRC_FOLDER)/*.c)
 OBJ := $(patsubst src/%.c, $(BUILD_FOLDER)/%.o, $(SRC))
-OBJ_ALGO += $(patsubst src/algorithms/*.c, $(BUILD_FOLDER)/$(ALGO_SRC_FOLDER)/%.o, $(SRC_ALGO))
+OBJ_ALGO := $(patsubst src/algorithms/%.c, $(BUILD_FOLDER)/$(ALGO_SRC_FOLDER)/%.o, $(SRC_ALGO))
 
 default: $(CURLWRAPPER_SO) $(CJSON_SO) $(TARGET) $(EXAMPLE_TARGET)
 
 $(TARGET): $(OBJ) $(OBJ_ALGO)
-	$(CC) $(OBJ) -o $(BUILD_FOLDER)/$@ $(LDFLAGS) \
+	$(CC) $(OBJ) $(OBJ_ALGO) -o $(BUILD_FOLDER)/$@ $(LDFLAGS) \
 	-L. -lcurlwrapper -lcjson \
 	-Wl,-rpath,'$$ORIGIN'
 	cp $(BUILD_FOLDER)/$(TARGET) .
@@ -45,8 +45,8 @@ $(CJSON_SO):
 $(BUILD_FOLDER)/%.o: src/%.c | $(BUILD_FOLDER)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -Iinclude -c $< -o $@
 
-$(BUILD_FOLDER)/$(ALGO_SRC_FOLDER) /%.o: src/%.c | $(BUILD_FOLDER)/$(ALGO_SRC_FOLDER) 
-	$(CC) $(CFLAGS) $(CPPFLAGS) -../Iinclude -c $< -o $@
+$(BUILD_FOLDER)/$(ALGO_SRC_FOLDER)/%.o: src/$(ALGO_SRC_FOLDER)/%.c | $(BUILD_FOLDER)/$(ALGO_SRC_FOLDER) 
+	$(CC) $(CFLAGS) $(CPPFLAGS) -Iinclude -c $< -o $@
 
 $(BUILD_FOLDER):
 	mkdir -p $@
